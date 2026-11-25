@@ -1,0 +1,282 @@
+@import "tailwindcss";
+
+@theme {
+  /* Heritage Luxury D2C Typography */
+  --font-serif: 'Cormorant Garamond', 'Tiro Devanagari Hindi', 'Noto Serif Devanagari', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Plus Jakarta Sans', 'Noto Sans Devanagari', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-devanagari-serif: 'Tiro Devanagari Hindi', 'Noto Serif Devanagari', Georgia, serif;
+  --font-devanagari-sans: 'Noto Sans Devanagari', 'Plus Jakarta Sans', system-ui, sans-serif;
+
+  /* Elevated Brand Palette */
+  --color-forest: #0F3D2E;
+  --color-forest-deep: #0A2B20;
+  --color-forest-soft: #155742;
+  --color-emerald: #155742;
+  --color-emerald-bright: #1C6B52;
+
+  --color-ivory: #FBF7EE;
+  --color-ivory-card: #FFFDF8;
+  --color-cream: #FBF7EE;
+  --color-sand: #F3EAD7;
+
+  --color-gold: #C9A24B;
+  --color-gold-light: #E8D08B;
+  --color-gold-dark: #9C7725;
+
+  --color-saffron: #D96B27;
+  --color-terracotta: #B84A24;
+  --color-saffron-soft: #FDF0E6;
+
+  --color-charcoal: #1B1B1B;
+  --color-muted: #5A554C;
+}
+
+:root {
+  /* Semantic Surface Tokens */
+  --gg-surface-cream: #FBF7EE;
+  --gg-surface-white: #FFFFFF;
+  --gg-surface-card: #FFFDF8;
+  --gg-surface-sand: #F3EAD7;
+  --gg-surface-green: #0F3D2E;
+  --gg-surface-green-deep: #0A2B20;
+  --gg-surface-emerald: #155742;
+
+  /* Brand & Accent Tokens */
+  --gg-gold: #C9A24B;
+  --gg-gold-light: #E8D08B;
+  --gg-gold-dark: #9C7725;
+  --gg-gold-gradient: linear-gradient(135deg, #DFBE6A 0%, #C9A24B 50%, #B38A2E 100%);
+  --gg-gold-gradient-hover: linear-gradient(135deg, #E8CA7A 0%, #D4AF56 50%, #BE9436 100%);
+  --gg-saffron: #D96B27;
+  --gg-terracotta: #B84A24;
+  --gg-saffron-soft: #FDF0E6;
+
+  /* Ink & Borders */
+  --gg-ink: #1B1B1B;
+  --gg-ink-muted: #5A554C;
+  --gg-ink-on-dark: #FBF7EE;
+  --gg-border-subtle: rgba(15, 61, 46, 0.12);
+  --gg-border-gold: rgba(201, 162, 75, 0.35);
+
+  /* 8px Spacing Grid Scale */
+  --gg-space-1: 0.5rem;   /* 8px */
+  --gg-space-2: 1rem;     /* 16px */
+  --gg-space-3: 1.5rem;   /* 24px */
+  --gg-space-4: 2rem;     /* 32px */
+  --gg-space-6: 3rem;     /* 48px */
+  --gg-space-7: 3.5rem;   /* 56px - mobile section rhythm */
+  --gg-space-12: 6rem;    /* 96px - desktop section rhythm */
+  --gg-space-14: 7rem;    /* 112px */
+
+  /* Radii (16px - 24px architectural card system) */
+  --gg-radius-input: 12px;
+  --gg-radius-card: 16px;
+  --gg-radius-featured: 20px;
+  --gg-radius-hero: 24px;
+  --gg-radius-pill: 9999px;
+
+  /* Soft Layered Shadows */
+  --gg-shadow-sm: 0 2px 8px -2px rgba(15, 61, 46, 0.06), 0 1px 3px -1px rgba(27, 27, 27, 0.04);
+  --gg-shadow-card: 0 10px 28px -10px rgba(15, 61, 46, 0.10), 0 4px 12px -4px rgba(15, 61, 46, 0.05);
+  --gg-shadow-elevated: 0 22px 48px -14px rgba(15, 61, 46, 0.16), 0 8px 20px -6px rgba(15, 61, 46, 0.07);
+  --gg-shadow-gold: 0 12px 30px -8px rgba(201, 162, 75, 0.36);
+
+  /* Fluid Type Scale (clamp) */
+  --gg-text-display: clamp(2.25rem, 4.4vw + 1rem, 4.15rem);
+  --gg-text-h1: clamp(2rem, 3.2vw + 1rem, 3.35rem);
+  --gg-text-h2: clamp(1.65rem, 2.3vw + 0.9rem, 2.55rem);
+  --gg-text-h3: clamp(1.25rem, 1.2vw + 0.85rem, 1.65rem);
+  --gg-text-body: clamp(0.975rem, 0.25vw + 0.9rem, 1.0625rem);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: var(--font-sans);
+    background-color: var(--gg-surface-cream);
+    color: var(--gg-ink);
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    line-height: 1.7;
+    font-size: var(--gg-text-body);
+  }
+
+  h1, h2, h3, h4, .font-editorial {
+    font-family: var(--font-serif);
+    letter-spacing: -0.015em;
+    line-height: 1.12;
+  }
+
+  /* Automatic Devanagari Typography Elevation when Hindi is selected */
+  html[lang="hi"],
+  html[data-gokul-lang="hi"] {
+    font-family: var(--font-devanagari-sans);
+  }
+
+  html[lang="hi"] body,
+  html[data-gokul-lang="hi"] body {
+    line-height: 1.78;
+  }
+
+  html[lang="hi"] h1,
+  html[lang="hi"] h2,
+  html[lang="hi"] h3,
+  html[lang="hi"] h4,
+  html[lang="hi"] .font-editorial,
+  html[data-gokul-lang="hi"] h1,
+  html[data-gokul-lang="hi"] h2,
+  html[data-gokul-lang="hi"] h3,
+  html[data-gokul-lang="hi"] h4,
+  html[data-gokul-lang="hi"] .font-editorial {
+    font-family: var(--font-devanagari-serif);
+    letter-spacing: 0;
+    line-height: 1.28;
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Fluid Typography Helpers */
+.gg-display {
+  font-family: var(--font-serif);
+  font-size: var(--gg-text-display);
+  line-height: 1.06;
+  font-weight: 600;
+}
+
+.gg-h1 {
+  font-family: var(--font-serif);
+  font-size: var(--gg-text-h1);
+  line-height: 1.1;
+  font-weight: 600;
+}
+
+.gg-h2 {
+  font-family: var(--font-serif);
+  font-size: var(--gg-text-h2);
+  line-height: 1.14;
+  font-weight: 600;
+}
+
+.gg-h3 {
+  font-family: var(--font-serif);
+  font-size: var(--gg-text-h3);
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.gg-body {
+  font-size: var(--gg-text-body);
+  line-height: 1.7;
+}
+
+.gg-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+}
+
+/* Section Rhythm (56px mobile / 96px-112px desktop) */
+.gg-section {
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+}
+
+@media (min-width: 768px) {
+  .gg-section {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .gg-section {
+    padding-top: 6.5rem;
+    padding-bottom: 6.5rem;
+  }
+}
+
+/* Borders, Hairlines, Layered Shadows */
+.editorial-border {
+  border-color: var(--gg-border-subtle);
+}
+
+.editorial-card-shadow {
+  box-shadow: var(--gg-shadow-card);
+}
+
+.gg-shadow-sm {
+  box-shadow: var(--gg-shadow-sm);
+}
+
+.gg-shadow-card {
+  box-shadow: var(--gg-shadow-card);
+}
+
+.gg-shadow-elevated {
+  box-shadow: var(--gg-shadow-elevated);
+}
+
+.gg-shadow-gold {
+  box-shadow: var(--gg-shadow-gold);
+}
+
+.gold-hairline {
+  background: linear-gradient(
+    90deg,
+    rgba(201, 162, 75, 0) 0%,
+    rgba(201, 162, 75, 0.7) 50%,
+    rgba(201, 162, 75, 0) 100%
+  );
+}
+
+.gg-cta-gold {
+  background: var(--gg-gold-gradient);
+  color: #0F3D2E;
+}
+
+.gg-cta-gold:hover {
+  background: var(--gg-gold-gradient-hover);
+}
+
+/* Subtle Archival Handmade Paper / Grain Texture (inline SVG turbulence, zero HTTP requests) */
+.gg-paper-grain {
+  position: relative;
+}
+
+.gg-paper-grain::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.032;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+/* Faint Heritage Indian Jaali / Lattice Pattern (5% opacity gold linework for deep green sections) */
+.gg-jaali-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='96' height='96' viewBox='0 0 96 96' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%23C9A24B' stroke-width='0.9' opacity='0.055'%3E%3Cpath d='M48 6L90 48L48 90L6 48L48 6Z'/%3E%3Ccircle cx='48' cy='48' r='22'/%3E%3Ccircle cx='48' cy='48' r='8'/%3E%3Cpath d='M48 14C55 24 62 31 82 48C62 65 55 72 48 82C41 72 34 65 14 48C34 31 41 24 48 14Z'/%3E%3Cpath d='M0 0L24 24M96 0L72 24M0 96L24 72M96 96L72 72'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 96px 96px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--gg-gold);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
