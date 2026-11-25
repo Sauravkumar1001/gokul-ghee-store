@@ -7,6 +7,13 @@ export const corsOptions = {
     if (env.clientOrigins.includes(origin)) {
       return callback(null, true);
     }
+    // Allow production Vercel frontend domains automatically
+    if (
+      origin === 'https://gokul-ghee-store.vercel.app' ||
+      /\.vercel\.app$/.test(origin)
+    ) {
+      return callback(null, true);
+    }
     if (env.nodeEnv !== 'production' && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
       return callback(null, true);
     }

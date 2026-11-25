@@ -270,6 +270,31 @@
   outline-offset: 2px;
 }
 
+/* Prevent horizontal overflow globally on mobile viewports */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Floating Action Buttons safe states and mobile coordination */
+.gg-floating-btn {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+body[data-mobile-menu-open="true"] .gg-floating-btn {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: scale(0.9) !important;
+}
+
+@media (max-width: 639px) {
+  body[data-ai-open="true"] .gg-whatsapp-btn {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: scale(0.9) !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

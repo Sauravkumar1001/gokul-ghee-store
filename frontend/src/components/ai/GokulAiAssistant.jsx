@@ -157,6 +157,18 @@ export default function GokulAiAssistant() {
     }
   }, [messages, isOpen]);
 
+  // Mark body state when AI assistant is open to coordinate with mobile floating actions
+  useEffect(() => {
+    if (isOpen) {
+      document.body.setAttribute('data-ai-open', 'true');
+    } else {
+      document.body.removeAttribute('data-ai-open');
+    }
+    return () => {
+      document.body.removeAttribute('data-ai-open');
+    };
+  }, [isOpen]);
+
   const sendQuery = async (rawPrompt) => {
     const text = rawPrompt.trim();
     if (!text || isThinking) return;
@@ -217,10 +229,10 @@ export default function GokulAiAssistant() {
 
   return (
     <div
-      className={`fixed right-4 sm:right-6 z-40 flex-col items-end gap-3 transition-[bottom] duration-200 ${
+      className={`fixed right-3 sm:right-6 z-40 gg-floating-btn flex flex-col items-end gap-2.5 transition-[bottom] duration-200 ${
         hasMobileStickyBar
           ? 'hidden lg:flex bottom-6'
-          : 'flex bottom-4 sm:bottom-6'
+          : 'flex bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] sm:bottom-6'
       }`}
     >
       {/* Side Pop-up Chat Drawer */}
@@ -236,7 +248,7 @@ export default function GokulAiAssistant() {
                 ? 'GOKUL AI शॉपिंग सहायक'
                 : 'GOKUL AI Shopping Assistant'
             }
-            className="w-[calc(100vw-2rem)] sm:w-[392px] max-h-[78vh] rounded-[24px] overflow-hidden border border-[#C9A24B]/45 bg-[#FFFDF8] gg-shadow-elevated flex flex-col"
+            className="w-[calc(100vw-1.5rem)] sm:w-[392px] max-h-[calc(100dvh-5.5rem)] sm:max-h-[78vh] rounded-[24px] overflow-hidden border border-[#C9A24B]/45 bg-[#FFFDF8] gg-shadow-elevated flex flex-col"
           >
             {/* Header */}
             <div className="relative overflow-hidden px-4 py-3.5 bg-[#0F3D2E] text-[#FBF7EE] flex items-center justify-between gap-3">
@@ -421,7 +433,7 @@ export default function GokulAiAssistant() {
             exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.96 }}
             transition={{ duration: 0.25 }}
             aria-label="GOKUL AI greeting"
-            className="max-w-[260px] rounded-[18px] border border-[#C9A24B]/50 bg-[#FFFDF8] gg-shadow-elevated px-3.5 py-2.5 text-xs text-[#1B1B1B] flex items-start gap-2.5"
+            className="max-w-[210px] min-[360px]:max-w-[240px] sm:max-w-[280px] rounded-[18px] border border-[#C9A24B]/50 bg-[#FFFDF8] gg-shadow-elevated px-3 py-2 text-xs text-[#1B1B1B] flex items-start gap-2"
           >
             <button
               type="button"
@@ -475,7 +487,7 @@ export default function GokulAiAssistant() {
         whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
         aria-label={isOpen ? t('ai.closeAria') : t('ai.fabAria')}
         aria-expanded={isOpen}
-        className="inline-flex items-center gap-2 sm:gap-2.5 px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-full bg-[#0F3D2E] text-[#FBF7EE] border border-[#C9A24B]/65 gg-shadow-elevated hover:bg-[#155742] transition-colors"
+        className="inline-flex items-center gap-2 sm:gap-2.5 px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-full bg-[#0F3D2E] text-[#FBF7EE] border border-[#C9A24B]/65 gg-shadow-elevated hover:bg-[#155742] transition-colors min-h-[44px] cursor-pointer whitespace-nowrap"
       >
         <span className="relative flex h-2.5 w-2.5">
           {!shouldReduceMotion && (

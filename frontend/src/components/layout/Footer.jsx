@@ -30,8 +30,8 @@ export default function Footer() {
       />
       <div className="h-px w-full gold-hairline relative z-10" aria-hidden="true" />
 
-      <Container className="relative z-10 py-14 lg:py-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8">
+      <Container className="relative z-10 py-12 sm:py-16 lg:py-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-8">
           {/* Brand Column */}
           <div className="lg:col-span-4 space-y-5">
             <div>
@@ -181,7 +181,7 @@ export default function Footer() {
                 </p>
               </div>
 
-              <div className="pt-2 flex flex-wrap gap-2.5">
+              <div className="pt-2 flex flex-col min-[380px]:flex-row flex-wrap gap-2.5">
                 <Button
                   href={directionsUrl}
                   target="_blank"
@@ -189,11 +189,18 @@ export default function Footer() {
                   variant="primary"
                   size="sm"
                   dark
+                  className="w-full min-[380px]:w-auto min-h-[44px] justify-center"
                   leftIcon={<Navigation className="w-3.5 h-3.5" />}
                 >
                   {t('storeCard.getDirections')}
                 </Button>
-                <Button to="/contact" variant="secondary" size="sm" dark>
+                <Button
+                  to="/contact"
+                  variant="secondary"
+                  size="sm"
+                  dark
+                  className="w-full min-[380px]:w-auto min-h-[44px] justify-center"
+                >
                   {isHi ? 'स्टोर विवरण' : 'Store Details'}
                 </Button>
               </div>
@@ -201,12 +208,12 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 pt-7 pb-14 sm:pb-10 border-t border-[#FBF7EE]/15 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-[#FBF7EE]/70">
-          <p>
+        <div className="mt-12 pt-7 pb-[calc(8rem+env(safe-area-inset-bottom,0px))] sm:pb-28 lg:pb-12 border-t border-[#FBF7EE]/15 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-[#FBF7EE]/70">
+          <p className="leading-relaxed">
             © {new Date().getFullYear()} {STORE_CONFIG.businessName} ({STORE_CONFIG.brandDisplayName}).{' '}
             {t('footer.copyright')}
           </p>
-          <p>{footerPurityNote}</p>
+          <p className="leading-relaxed text-[#FBF7EE]/60">{footerPurityNote}</p>
         </div>
       </Container>
     </footer>

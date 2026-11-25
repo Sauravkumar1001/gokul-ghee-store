@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import {
   ChevronDown,
@@ -28,7 +28,28 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const prefersReduced = useReducedMotion();
+
+  // Auto-close mobile drawer on route change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
+  // Lock body scroll and mark state when mobile drawer is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.setAttribute('data-mobile-menu-open', 'true');
+    } else {
+      document.body.style.overflow = '';
+      document.body.removeAttribute('data-mobile-menu-open');
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.body.removeAttribute('data-mobile-menu-open');
+    };
+  }, [mobileOpen]);
 
   const { itemCount, openDrawer } = useCart();
   const { wishlistCount } = useWishlist();
@@ -277,116 +298,150 @@ export default function Navbar() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={prefersReduced ? { opacity: 1 } : { opacity: 0, y: -8 }}
+            id="mobile-navigation-drawer"
+            initial={prefersReduced ? { opacity: 1 } : { opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={prefersReduced ? { opacity: 0 } : { opacity: 0, y: -8 }}
-            transition={{ duration: prefersReduced ? 0 : 0.2, ease: GG_EASE }}
-            className="min-[1100px]:hidden border-t border-[#0F3D2E]/12 bg-[#FFFDF8] px-4 py-5 space-y-5 max-h-[82vh] overflow-y-auto gg-shadow-elevated"
+            exit={prefersReduced ? { opacity: 0 } : { opacity: 0, y: -6 }}
+            transition={{ duration: prefersReduced ? 0 : 0.22, ease: GG_EASE }}
+            className="min-[1100px]:hidden fixed inset-x-0 top-[68px] sm:top-20 z-50 bg-[#FFFDF8] border-t border-[#0F3D2E]/12 flex flex-col shadow-2xl overflow-hidden"
+            style={{ height: 'calc(100dvh - 68px)' }}
           >
-            <LanguageSwitch variant="mobile" />
+            <div className="flex-1 overflow-y-auto overscroll-contain px-4 sm:px-6 py-5 space-y-5 pb-36">
+              {/* Language & Search Bar */}
+              <div className="space-y-3.5">
+                <LanguageSwitch variant="mobile" />
 
-            <form onSubmit={handleSearchSubmit} className="flex items-center gap-2">
-              <input
-                type="search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={t('nav.searchPlaceholder')}
-                aria-label="Mobile search products"
-                className="flex-1 min-h-[44px] px-4 py-2 rounded-full bg-[#FBF7EE] border border-[#0F3D2E]/18 text-sm focus:outline-none focus:border-[#0F3D2E]"
-              />
-              <Button type="submit" variant="forest" size="sm" className="min-h-[44px]">
-                {isHi ? 'खोजें' : 'Go'}
-              </Button>
-            </form>
-
-            <div className="space-y-1">
-              <p className="gg-eyebrow text-[#9C7725] px-2 pb-1">
-                {t('nav.exploreStorefront')}
-              </p>
-              <Link
-                to="/"
-                onClick={() => setMobileOpen(false)}
-                className="block px-3 py-2.5 text-sm font-semibold text-[#0F3D2E] hover:bg-[#F3EAD7]/60 rounded-[12px]"
-              >
-                {t('nav.home')}
-              </Link>
-              <Link
-                to="/shop"
-                onClick={() => setMobileOpen(false)}
-                className="block px-3 py-2.5 text-sm font-semibold text-[#0F3D2E] hover:bg-[#F3EAD7]/60 rounded-[12px]"
-              >
-                {language === 'en' ? 'Shop All Products' : t('nav.allProducts')}
-              </Link>
-              <div className="grid grid-cols-2 gap-1.5 pt-1">
-                {SAMPLE_CATEGORIES.map((category) => (
-                  <Link
-                    key={category.id}
-                    to={`/shop/${category.slug}`}
-                    onClick={() => setMobileOpen(false)}
-                    className="px-3 py-2 rounded-[10px] bg-[#FBF7EE] border border-[#0F3D2E]/10 text-xs font-medium text-[#1B1B1B] hover:border-[#C9A24B] hover:text-[#0F3D2E]"
-                  >
-                    {categoryLabel(category.slug, category.name)}
-                  </Link>
-                ))}
+                <form onSubmit={handleSearchSubmit} className="flex items-center gap-2">
+                  <div className="relative flex-1">
+                    <Search className="w-4 h-4 text-[#5A554C] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input
+                      type="search"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder={t('nav.searchPlaceholder')}
+                      aria-label="Mobile search products"
+                      className="w-full min-h-[44px] pl-10 pr-4 py-2 rounded-full bg-[#FBF7EE] border border-[#0F3D2E]/18 text-sm text-[#1B1B1B] placeholder:text-[#5A554C]/70 focus:outline-none focus:border-[#0F3D2E]"
+                    />
+                  </div>
+                  <Button type="submit" variant="forest" size="sm" className="min-h-[44px] px-4 shrink-0">
+                    {isHi ? 'खोजें' : 'Go'}
+                  </Button>
+                </form>
               </div>
-            </div>
 
-            <div className="pt-3 border-t border-[#0F3D2E]/10 grid grid-cols-2 gap-2.5 text-sm">
-              <Button
-                to="/about"
-                variant="secondary"
-                size="sm"
-                onClick={() => setMobileOpen(false)}
-              >
-                {t('nav.ourStory')}
-              </Button>
-              <Button
-                to="/contact"
-                variant="secondary"
-                size="sm"
-                onClick={() => setMobileOpen(false)}
-              >
-                {t('nav.visitStore')}
-              </Button>
-              <Button
-                to={isAuthenticated ? '/account' : '/login'}
-                variant="ghost"
-                size="sm"
-                className="bg-[#F3EAD7]/70"
-                onClick={() => setMobileOpen(false)}
-              >
-                {t('nav.accountLabel')}
-              </Button>
-              <Button
-                to="/wishlist"
-                variant="ghost"
-                size="sm"
-                className="bg-[#F3EAD7]/70"
-                onClick={() => setMobileOpen(false)}
-              >
-                {t('nav.wishlistAria')} ({wishlistCount})
-              </Button>
-              <Button
-                to="/cart"
-                variant="primary"
-                size="md"
-                fullWidth
-                className="col-span-2"
-                onClick={() => setMobileOpen(false)}
-              >
-                {t('nav.viewCart')} ({itemCount})
-              </Button>
-            </div>
+              {/* Storefront Exploration Links & Categories */}
+              <div className="space-y-2.5">
+                <p className="gg-eyebrow text-[#9C7725] px-1 text-[11px] font-bold uppercase tracking-[0.16em]">
+                  {t('nav.exploreStorefront')}
+                </p>
+                <div className="grid grid-cols-2 gap-2">
+                  <Link
+                    to="/"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center justify-center min-h-[44px] px-3 py-2 text-sm font-semibold text-[#0F3D2E] bg-[#F3EAD7]/50 hover:bg-[#F3EAD7] rounded-[14px] border border-[#0F3D2E]/10 transition-colors"
+                  >
+                    {t('nav.home')}
+                  </Link>
+                  <Link
+                    to="/shop"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center justify-center min-h-[44px] px-3 py-2 text-sm font-semibold text-[#0F3D2E] bg-[#F3EAD7]/50 hover:bg-[#F3EAD7] rounded-[14px] border border-[#0F3D2E]/10 transition-colors"
+                  >
+                    {language === 'en' ? 'Shop All' : t('nav.allProducts')}
+                  </Link>
+                </div>
 
-            <div className="pt-2 border-t border-[#0F3D2E]/10 flex items-center justify-between text-xs text-[#5A554C]">
-              <span>{language === 'en' ? STORE_CONFIG.hours : t('storeCard.timingsValue')}</span>
-              <a
-                href={STORE_CONFIG.phoneHref}
-                className="inline-flex items-center gap-1 font-semibold text-[#0F3D2E]"
-              >
-                <Phone className="w-3.5 h-3.5" />
-                <span>{STORE_CONFIG.phone}</span>
-              </a>
+                {/* Categories Responsive Grid: 2 columns on normal screens (>= 340px), 1 column on <= 339px */}
+                <div className="pt-1.5 space-y-1.5">
+                  <p className="text-[10px] uppercase font-semibold tracking-wider text-[#7A7468] px-1">
+                    {isHi ? 'श्रेणियाँ' : 'Categories'}
+                  </p>
+                  <div className="grid grid-cols-1 min-[340px]:grid-cols-2 gap-2">
+                    {SAMPLE_CATEGORIES.map((category) => (
+                      <Link
+                        key={category.id}
+                        to={`/shop/${category.slug}`}
+                        onClick={() => setMobileOpen(false)}
+                        className="min-h-[44px] flex items-center justify-between px-3.5 py-2.5 rounded-[12px] bg-[#FBF7EE] border border-[#0F3D2E]/10 text-xs font-medium text-[#1B1B1B] hover:border-[#C9A24B] hover:text-[#0F3D2E] hover:bg-[#F3EAD7]/45 transition-colors"
+                      >
+                        <span className="truncate pr-1.5 font-medium">
+                          {categoryLabel(category.slug, category.name)}
+                        </span>
+                        <span className="text-[10px] uppercase tracking-wider text-[#9C7725] shrink-0 font-semibold">
+                          {category.eyebrow}
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Navigation Action Buttons */}
+              <div className="pt-3 border-t border-[#0F3D2E]/10 space-y-2.5">
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  <Button
+                    to="/about"
+                    variant="secondary"
+                    size="sm"
+                    className="min-h-[44px] justify-center"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    {t('nav.ourStory')}
+                  </Button>
+                  <Button
+                    to="/contact"
+                    variant="secondary"
+                    size="sm"
+                    className="min-h-[44px] justify-center"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    {t('nav.visitStore')}
+                  </Button>
+                  <Button
+                    to={isAuthenticated ? '/account' : '/login'}
+                    variant="ghost"
+                    size="sm"
+                    className="min-h-[44px] justify-center bg-[#F3EAD7]/60"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    {t('nav.accountLabel')}
+                  </Button>
+                  <Button
+                    to="/wishlist"
+                    variant="ghost"
+                    size="sm"
+                    className="min-h-[44px] justify-center bg-[#F3EAD7]/60"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    {t('nav.wishlistAria')} ({wishlistCount})
+                  </Button>
+                </div>
+
+                <Button
+                  to="/cart"
+                  variant="primary"
+                  size="md"
+                  fullWidth
+                  className="min-h-[46px] justify-center"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {t('nav.viewCart')} ({itemCount})
+                </Button>
+              </div>
+
+              {/* Business Hours & Direct Phone */}
+              <div className="pt-3 border-t border-[#0F3D2E]/10 flex flex-col min-[360px]:flex-row items-start min-[360px]:items-center justify-between gap-2 text-xs text-[#5A554C]">
+                <span className="leading-snug">
+                  {language === 'en' ? STORE_CONFIG.hours : t('storeCard.timingsValue')}
+                </span>
+                <a
+                  href={STORE_CONFIG.phoneHref}
+                  className="min-h-[40px] inline-flex items-center gap-1.5 font-semibold text-[#0F3D2E] hover:text-[#9C7725] transition-colors py-1"
+                >
+                  <Phone className="w-3.5 h-3.5 text-[#C9A24B]" />
+                  <span>{STORE_CONFIG.phone}</span>
+                </a>
+              </div>
             </div>
           </motion.div>
         )}
