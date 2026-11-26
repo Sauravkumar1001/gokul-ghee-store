@@ -10,8 +10,8 @@ const TONE_CLASSES = {
 
 const SPACING_CLASSES = {
   none: '',
-  compact: 'py-6 md:py-10',
-  hero: 'py-8 md:py-12 lg:py-14',
+  compact: 'py-10 md:py-16',
+  hero: 'py-12 md:py-20 lg:py-24',
   default: 'gg-section',
 };
 
