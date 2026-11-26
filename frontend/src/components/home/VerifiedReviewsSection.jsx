@@ -1,4 +1,4 @@
-import { ExternalLink, ShieldCheck, Star } from 'lucide-react';
+import { ExternalLink, ShieldCheck, Sparkles, Star } from 'lucide-react';
 import { STORE_CONFIG } from '../../config/storeConfig';
 import { useLanguage } from '../../context/LanguageContext';
 import {
@@ -27,8 +27,8 @@ export default function VerifiedReviewsSection() {
       : `${reviewCount} Google reviews`;
 
   return (
-    <SectionSurface tone="sand" className="border-y border-[#E6DEC9]">
-      <Container className="space-y-10">
+    <SectionSurface tone="sand" className="border-y border-[#E6DEC9]/70 relative">
+      <Container className="space-y-10 relative z-10">
         <SectionHeading
           variant="centered"
           eyebrow={language === 'en' ? 'Verified Sources Only' : t('home.verifiedReviews.eyebrow')}
@@ -47,8 +47,14 @@ export default function VerifiedReviewsSection() {
             variant="green"
             radius="xl"
             padding="lg"
-            className="relative overflow-hidden border-[#C9A24B]/45 bg-gradient-to-br from-[#0F3D2E] via-[#0C3326] to-[#082219] text-center"
+            className="group relative overflow-hidden border-[#C9A24B]/50 hover:border-[#C9A24B]/80 hover:shadow-[0_25px_60px_rgba(201,162,75,0.24)] bg-gradient-to-br from-[#0F3D2E] via-[#0C3326] to-[#082219] text-center transition-all duration-300"
           >
+            {/* Ambient golden halo behind review card */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.22)_0%,transparent_70%)] blur-lg"
+            />
+
             <JaaliPattern variant="tile" opacity={0.055} />
             <JaaliPattern
               variant="mandala"
@@ -78,7 +84,7 @@ export default function VerifiedReviewsSection() {
                   >
                     {score.toFixed(1)}
                   </span>
-                  <span className="text-4xl sm:text-5xl text-[#E8D08B] leading-none" aria-hidden="true">
+                  <span className="text-4xl sm:text-5xl text-[#E8D08B] leading-none drop-shadow-[0_2px_10px_rgba(201,162,75,0.5)]" aria-hidden="true">
                     ★
                   </span>
                 </div>
@@ -90,7 +96,7 @@ export default function VerifiedReviewsSection() {
                   {STARS.map((idx) => (
                     <Star
                       key={idx}
-                      className="w-5 h-5 text-[#E8D08B] fill-[#E8D08B]"
+                      className="w-5 h-5 text-[#E8D08B] fill-[#E8D08B] drop-shadow-[0_1px_4px_rgba(201,162,75,0.4)]"
                     />
                   ))}
                 </div>

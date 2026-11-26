@@ -105,10 +105,10 @@ export default function SpecialOffersSection() {
                   variant={isPrimary ? 'green' : 'sand'}
                   radius="xl"
                   padding="lg"
-                  className={`relative h-full overflow-hidden flex flex-col justify-between gap-6 ${
+                  className={`group relative h-full overflow-hidden flex flex-col justify-between gap-6 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_22px_50px_rgba(201,162,75,0.24)] ${
                     isPrimary
-                      ? 'border-[#C9A24B]/40 bg-gradient-to-br from-[#0F3D2E] via-[#0C3527] to-[#072017]'
-                      : 'border-[#C9A24B]/40 bg-gradient-to-br from-[#FFFDF7] via-[#F7EDD4] to-[#EED9A9]'
+                      ? 'border-[#C9A24B]/40 hover:border-[#C9A24B]/80 bg-gradient-to-br from-[#0F3D2E] via-[#0C3527] to-[#072017]'
+                      : 'border-[#C9A24B]/40 hover:border-[#C9A24B]/80 bg-gradient-to-br from-[#FFFDF7] via-[#F7EDD4] to-[#EED9A9]'
                   }`}
                 >
                   <JaaliPattern variant="tile" opacity={isPrimary ? 0.055 : 0.04} />
@@ -145,7 +145,7 @@ export default function SpecialOffersSection() {
                         src={visual.src}
                         alt={visual.alt}
                         loading="lazy"
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover scale-100 group-hover:scale-106 transition-transform duration-700 ease-out"
                       />
                       <div
                         aria-hidden="true"
@@ -155,6 +155,7 @@ export default function SpecialOffersSection() {
 
                     {!isPrimary && (
                       <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0F3D2E] text-[#FBF7EE] border border-[#C9A24B]/45 text-xs font-semibold gg-shadow-sm">
+                        <span className="w-2 h-2 rounded-full bg-[#E8D08B] animate-pulse shrink-0" />
                         <Clock className="w-3.5 h-3.5 text-[#E8D08B] shrink-0" aria-hidden="true" />
                         <span>{countdownLabel}</span>
                       </div>

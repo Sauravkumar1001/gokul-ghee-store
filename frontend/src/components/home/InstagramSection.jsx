@@ -43,15 +43,15 @@ export default function InstagramSection() {
         <StaggerGroup className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5 sm:gap-4">
           {GALLERY_TILES.map((tile) => (
             <StaggerItem key={tile.src}>
-              <div className="group relative aspect-square rounded-[18px] overflow-hidden border border-[#E6DEC9] hover:border-[#C9A24B]/70 bg-[#F3EAD7] gg-shadow-sm transition-all duration-300">
+              <div className="group relative aspect-square rounded-[18px] overflow-hidden border border-[#E6DEC9] hover:border-[#C9A24B] bg-[#F3EAD7] gg-shadow-sm hover:shadow-[0_12px_30px_rgba(201,162,75,0.28)] hover:-translate-y-1 transition-all duration-300">
                 <img
                   src={tile.src}
                   alt={tile.caption}
                   loading="lazy"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                  className="w-full h-full object-cover scale-100 group-hover:scale-108 transition-transform duration-700 ease-out"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A2B20]/90 via-[#0F3D2E]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-3 flex items-end">
-                  <p className="text-[11px] font-medium text-[#FBF7EE] leading-snug">
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A2B20]/92 via-[#0F3D2E]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-3 flex items-end">
+                  <p className="text-[11px] font-semibold text-[#FBF7EE] leading-snug">
                     {tile.caption}
                   </p>
                 </div>

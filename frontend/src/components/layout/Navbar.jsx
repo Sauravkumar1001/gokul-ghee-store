@@ -78,7 +78,8 @@ export default function Navbar() {
     }`;
 
   return (
-    <header className="sticky top-0 z-40 bg-[#FBF7EE]/92 backdrop-blur-xl border-b border-[#0F3D2E]/10 gg-shadow-sm">
+    <header className="sticky top-0 z-40 bg-[#FFFDF8]/94 backdrop-blur-xl border-b border-[#C9A24B]/30 shadow-[0_4px_24px_rgba(201,162,75,0.09)]">
+      <div className="h-[2px] w-full gold-hairline opacity-80" aria-hidden="true" />
       <Container>
         <div className="h-[68px] sm:h-20 flex items-center justify-between gap-2.5 lg:gap-4">
           {/* Mobile menu toggle */}

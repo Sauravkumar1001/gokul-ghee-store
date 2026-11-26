@@ -21,7 +21,14 @@ export default function Footer() {
       : 'Crafted fresh daily in Anand Bazar, Danapur Cantonment, Patna.';
 
   return (
-    <footer className="relative overflow-hidden bg-[#0F3D2E] text-[#FBF7EE] gg-paper-grain border-t border-[#C9A24B]/30">
+    <footer className="relative overflow-hidden bg-[#0F3D2E] text-[#FBF7EE] gg-paper-grain border-t border-[#C9A24B]/40">
+      {/* Drifting ambient aurora glow */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden z-0">
+        <div className="absolute -top-24 -left-20 w-80 h-80 rounded-full bg-[#C9A24B]/14 blur-[90px] animate-blob-1" />
+        <div className="absolute -bottom-24 -right-20 w-96 h-96 rounded-full bg-[#059669]/16 blur-[95px] animate-blob-2" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#E8D08B]/5 blur-[120px]" />
+      </div>
+
       <JaaliPattern variant="tile" />
       <JaaliPattern
         variant="mandala"

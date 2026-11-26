@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, Sparkles } from 'lucide-react';
 import { storeService } from '../../services/storeService';
 import { useLanguage } from '../../context/LanguageContext';
 import { Button, Container, FadeUp, SectionHeading, SectionSurface } from '../ui';
@@ -39,8 +39,14 @@ export default function NewsletterSection() {
   };
 
   return (
-    <SectionSurface tone="green" withGrain withJaali>
-      <Container size="narrow">
+    <SectionSurface tone="green" withGrain withJaali className="relative overflow-hidden">
+      {/* Drifting ambient golden aura in background */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden z-0">
+        <div className="absolute -top-20 -left-20 w-80 h-80 rounded-full bg-[#C9A24B]/15 blur-[85px] animate-blob-1" />
+        <div className="absolute -bottom-24 -right-20 w-80 h-80 rounded-full bg-[#E8D08B]/12 blur-[90px] animate-blob-2" />
+      </div>
+
+      <Container size="narrow" className="relative z-10">
         <FadeUp className="text-center space-y-6">
           <SectionHeading
             variant="centered"
@@ -69,7 +75,7 @@ export default function NewsletterSection() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder={t('home.newsletter.placeholder')}
               aria-label="Email address for store updates"
-              className="flex-1 px-5 py-3 rounded-full bg-[#FFFDF8] border border-[#C9A24B]/45 text-sm text-[#1B1B1B] placeholder:text-[#7A7468] focus:outline-none focus:ring-2 focus:ring-[#C9A24B] min-h-[46px]"
+              className="flex-1 px-5 py-3 rounded-full bg-[#FFFDF8]/95 backdrop-blur-md border border-[#C9A24B]/60 text-sm text-[#1B1B1B] placeholder:text-[#7A7468] focus:outline-none focus:ring-2 focus:ring-[#C9A24B] shadow-sm min-h-[46px]"
             />
             <Button
               type="submit"
@@ -78,6 +84,7 @@ export default function NewsletterSection() {
               dark
               loading={submitting}
               disabled={submitting}
+              rightIcon={<Sparkles className="w-3.5 h-3.5 text-[#0F3D2E]" aria-hidden="true" />}
               className="shrink-0"
             >
               {t('home.newsletter.button')}
