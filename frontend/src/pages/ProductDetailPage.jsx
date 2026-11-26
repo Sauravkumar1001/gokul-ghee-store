@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
+  ArrowRight,
   Award,
   ExternalLink,
   Heart,
@@ -417,6 +418,29 @@ export default function ProductDetailPage() {
                   subtotal={activeVariant.price * quantity}
                   onPincodeResolved={(pin) => setPincode(pin)}
                 />
+
+                {/* Ghee Usage & Purity Quick Guide Pill */}
+                {(product?.categorySlug === 'desi-ghee' || product?.slug?.includes('ghee')) && (
+                  <Link
+                    to="/ghee-meter"
+                    className="flex items-center justify-between p-3 rounded-2xl bg-gradient-to-r from-[#155742] to-[#0A2B20] border border-[#C9A24B]/40 text-[#FBF7EE] shadow-sm hover:border-[#E8D08B] transition-all group"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-xl bg-[#E8D08B] text-[#0A261B] flex items-center justify-center font-bold text-xs shrink-0">
+                        ⚖️
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-[#E8D08B] leading-tight">
+                          {isHi ? 'कितना घी लगेगा? स्मार्ट कैलकुलेटर' : 'How Much Ghee Do You Need?'}
+                        </p>
+                        <p className="text-[11px] text-[#FBF7EE]/80">
+                          {isHi ? 'परिवार व पूजा अनुसार गणना + 4 शुद्धता टेस्ट' : 'Calculate family quota & test purity at home'}
+                        </p>
+                      </div>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-[#E8D08B] group-hover:translate-x-1 transition-transform shrink-0" />
+                  </Link>
+                )}
 
                 {/* Trust Row */}
                 <div className="grid grid-cols-3 gap-2.5 pt-2 border-t border-[#0F3D2E]/10">

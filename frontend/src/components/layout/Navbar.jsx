@@ -8,6 +8,7 @@ import {
   Phone,
   Search,
   ShoppingBag,
+  Sparkles,
   User,
   X,
 } from 'lucide-react';
@@ -196,6 +197,19 @@ export default function Navbar() {
             <NavLink to="/contact" className={navLinkClass}>
               {t('nav.visitStore')}
             </NavLink>
+            <NavLink
+              to="/ghee-meter"
+              className={({ isActive }) =>
+                `inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all duration-200 border ${
+                  isActive
+                    ? 'bg-[#155742] text-[#E8D08B] border-[#C9A24B] shadow-xs'
+                    : 'bg-[#F3EAD7]/60 text-[#0F3D2E] border-[#C9A24B]/35 hover:bg-[#F3EAD7] hover:border-[#C9A24B]'
+                }`
+              }
+            >
+              <Sparkles className="w-3.5 h-3.5 text-[#C9A24B]" />
+              <span>{isHi ? 'घी कैलकुलेटर' : 'Ghee Meter'}</span>
+            </NavLink>
           </nav>
 
           {/* Action Icons */}
@@ -350,6 +364,21 @@ export default function Navbar() {
                     {language === 'en' ? 'Shop All' : t('nav.allProducts')}
                   </Link>
                 </div>
+
+                {/* Ghee Usage Meter & Purity Guide Highlight */}
+                <Link
+                  to="/ghee-meter"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center justify-between min-h-[44px] px-3.5 py-2.5 text-xs font-bold text-[#0F3D2E] bg-gradient-to-r from-[#F3EAD7] via-[#FFFDF8] to-[#F3EAD7] rounded-[14px] border border-[#C9A24B]/40 shadow-xs transition-colors"
+                >
+                  <span className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-[#C9A24B]" />
+                    <span>{isHi ? 'घी कैलकुलेटर व शुद्धता दर्पण' : 'Smart Ghee Meter & Purity Guide'}</span>
+                  </span>
+                  <span className="text-[10px] uppercase font-bold text-[#9C7725] px-2 py-0.5 rounded-full bg-[#155742]/10 border border-[#C9A24B]/30">
+                    New
+                  </span>
+                </Link>
 
                 {/* Categories Responsive Grid: 2 columns on normal screens (>= 340px), 1 column on <= 339px */}
                 <div className="pt-1.5 space-y-1.5">

@@ -23,6 +23,7 @@ const ContactPage = lazy(() => import('./pages/ContactPage'));
 const FaqPage = lazy(() => import('./pages/FaqPage'));
 const PolicyPage = lazy(() => import('./pages/PolicyPage'));
 const StyleGuidePage = lazy(() => import('./pages/StyleGuidePage'));
+const GheeUsageMeterPage = lazy(() => import('./pages/GheeUsageMeterPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 const AdminLoginPage = lazy(() => import('./pages/admin/AdminLoginPage'));
@@ -218,6 +219,8 @@ export function AppRoutes() {
                       <Route path="/terms" element={<PolicyPage type="terms" />} />
                       <Route path="/refund-policy" element={<PolicyPage type="refund" />} />
                       <Route path="/styleguide" element={<StyleGuidePage />} />
+                      <Route path="/ghee-meter" element={<GheeUsageMeterPage />} />
+                      <Route path="/purity-guide" element={<GheeUsageMeterPage />} />
                       <Route path="*" element={<NotFoundPage />} />
                     </Routes>
                   </StorefrontRouteSuspense>

@@ -2,6 +2,7 @@ import HeroSection from '../components/home/HeroSection';
 import CategoryShowcase from '../components/home/CategoryShowcase';
 import BestsellingSection from '../components/home/BestsellingSection';
 import FeaturedGheeSection from '../components/home/FeaturedGheeSection';
+import GheeUsagePuritySection from '../components/home/GheeUsagePuritySection';
 import MithaiSnacksSection from '../components/home/MithaiSnacksSection';
 import WhyChooseSection from '../components/home/WhyChooseSection';
 import BrandStorySection from '../components/home/BrandStorySection';
@@ -18,6 +19,7 @@ export default function HomePage() {
       <CategoryShowcase />
       <BestsellingSection />
       <FeaturedGheeSection />
+      <GheeUsagePuritySection />
       <MithaiSnacksSection />
       <WhyChooseSection />
       <BrandStorySection />

@@ -295,6 +295,103 @@ body[data-mobile-menu-open="true"] .gg-floating-btn {
   }
 }
 
+/* Glassmorphism Auth Backdrop Blobs & Particles */
+@keyframes gg-blob-drift-1 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(36px, 28px, 0) scale(1.08);
+  }
+}
+
+@keyframes gg-blob-drift-2 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-32px, -24px, 0) scale(1.06);
+  }
+}
+
+@keyframes gg-blob-drift-3 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(24px, -30px, 0) scale(0.95);
+  }
+}
+
+@keyframes gg-blob-drift-4 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-22px, 22px, 0) scale(1.04);
+  }
+}
+
+@keyframes gg-sparkle-float-up {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.7);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.85;
+  }
+  80% {
+    opacity: 0.75;
+  }
+  100% {
+    transform: translate3d(0, -65px, 0) scale(1.15);
+    opacity: 0;
+  }
+}
+
+.animate-blob-1 {
+  animation: gg-blob-drift-1 20s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-blob-2 {
+  animation: gg-blob-drift-2 24s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-blob-3 {
+  animation: gg-blob-drift-3 18s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-blob-4 {
+  animation: gg-blob-drift-4 22s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Performance safeguard: Disable heavy background drifts on screens < 480px */
+@media (max-width: 480px) {
+  .animate-blob-1,
+  .animate-blob-2,
+  .animate-blob-3,
+  .animate-blob-4 {
+    animation: none !important;
+  }
+}
+
+/* Fallback for browsers without backdrop-filter support */
+@supports not (backdrop-filter: blur(20px)) {
+  .gg-glass-card {
+    background-color: #FFFDF8 !important;
+  }
+  .gg-glass-brand-panel {
+    background-color: #041D14 !important;
+  }
+  .gg-glass-form-panel {
+    background-color: #FFFDF8 !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
