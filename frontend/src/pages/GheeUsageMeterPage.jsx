@@ -66,7 +66,7 @@ export default function GheeUsageMeterPage() {
 
       {/* Main Ghee Usage Meter & Purity Lab Component */}
       <main className="relative z-10">
-        <GheeUsagePuritySection />
+        <GheeUsagePuritySection isHomePage={false} />
       </main>
     </div>
   );

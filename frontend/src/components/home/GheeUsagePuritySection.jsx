@@ -137,7 +137,7 @@ const PURITY_TESTS = [
 /* =========================================================================
    MAIN GHEE USAGE METER & PURITY SECTION COMPONENT
    ========================================================================= */
-export default function GheeUsagePuritySection() {
+export default function GheeUsagePuritySection({ isHomePage = false }) {
   const { language, t } = useLanguage();
   const isHi = language === 'hi';
   const isHinglish = language === 'hinglish';
@@ -319,7 +319,9 @@ export default function GheeUsagePuritySection() {
     <section
       id="ghee-usage-meter"
       aria-label="Gokul Ghee Usage Meter & Purity Guide"
-      className="relative py-14 sm:py-20 lg:py-24 overflow-hidden bg-gradient-to-b from-[#0A2B20] via-[#082219] to-[#04150F] text-[#FBF7EE] select-none"
+      className={`relative ${
+        isHomePage ? 'py-8 sm:py-10 md:py-12' : 'py-14 sm:py-20 lg:py-24'
+      } overflow-hidden bg-gradient-to-b from-[#0A2B20] via-[#082219] to-[#04150F] text-[#FBF7EE] select-none`}
     >
       {/* =================================================================
           AMBIENT BACKGROUND GLOW BLOBS & JAALI PATTERN
@@ -342,12 +344,16 @@ export default function GheeUsagePuritySection() {
         </motion.div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      <div
+        className={`relative z-10 ${
+          isHomePage ? 'max-w-6xl space-y-5 sm:space-y-6' : 'max-w-7xl space-y-10'
+        } mx-auto px-4 sm:px-6 lg:px-8`}
+      >
         {/* =================================================================
             SECTION HEADER
            ================================================================= */}
-        <div className="text-center max-w-3xl mx-auto space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#155742]/70 border border-[#C9A24B]/35 text-[#E8D08B] text-xs font-bold tracking-wider uppercase backdrop-blur-md shadow-xs">
+        <div className={`text-center ${isHomePage ? 'max-w-2xl space-y-2' : 'max-w-3xl space-y-3'} mx-auto`}>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#155742]/70 border border-[#C9A24B]/35 text-[#E8D08B] text-xs font-bold tracking-wider uppercase backdrop-blur-md shadow-xs">
             <Sparkles className="w-3.5 h-3.5 text-[#C9A24B]" />
             <span>
               {isHi
@@ -358,11 +364,19 @@ export default function GheeUsagePuritySection() {
             </span>
           </div>
 
-          <h2 className="font-editorial text-3xl sm:text-4xl lg:text-5xl font-bold text-[#FBF7EE] leading-tight">
+          <h2
+            className={`font-editorial ${
+              isHomePage ? 'text-2xl sm:text-3xl' : 'text-3xl sm:text-4xl lg:text-5xl'
+            } font-bold text-[#FBF7EE] leading-tight`}
+          >
             {isHi ? 'कितना घी लगेगा? और शुद्धता कैसे जांचें?' : 'Smart Ghee Meter & Kitchen Purity Lab'}
           </h2>
 
-          <p className="text-sm sm:text-base text-[#FBF7EE]/80 leading-relaxed">
+          <p
+            className={`${
+              isHomePage ? 'text-xs sm:text-sm max-w-xl' : 'text-sm sm:text-base'
+            } text-[#FBF7EE]/80 leading-relaxed mx-auto`}
+          >
             {isHi
               ? 'अपने परिवार, पूजा या दावत के लिए सही मात्रा का अनुमान लगाएं — और जानें रसोई में शुद्ध देसी घी की 4 प्रामाणिक पहचान।'
               : 'Calculate your exact household or celebration needs in seconds, and discover 4 kitchen-tested rituals to verify authentic Bilona Ghee at home.'}
@@ -373,11 +387,17 @@ export default function GheeUsagePuritySection() {
             MASTER TAB SWITCHER ("स्मार्ट घी कैलकुलेटर" ⇄ "शुद्धता की पहचान")
            ================================================================= */}
         <div className="flex justify-center">
-          <div className="inline-flex p-1.5 rounded-2xl bg-[#041D14]/80 border border-[#C9A24B]/30 backdrop-blur-md shadow-lg">
+          <div
+            className={`inline-flex ${
+              isHomePage ? 'p-1 rounded-xl' : 'p-1.5 rounded-2xl'
+            } bg-[#041D14]/80 border border-[#C9A24B]/30 backdrop-blur-md shadow-lg`}
+          >
             <button
               type="button"
               onClick={() => setActiveMainTab('calculator')}
-              className={`relative px-5 sm:px-7 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
+              className={`relative ${
+                isHomePage ? 'px-4 sm:px-6 py-2 text-xs' : 'px-5 sm:px-7 py-2.5 text-xs sm:text-sm'
+              } font-bold transition-all duration-200 cursor-pointer flex items-center gap-2 ${
                 activeMainTab === 'calculator'
                   ? 'text-[#0A261B]'
                   : 'text-[#E8D08B]/80 hover:text-[#FBF7EE]'
@@ -431,11 +451,15 @@ export default function GheeUsagePuritySection() {
               animate={{ opacity: 1, y: 0 }}
               exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: -16 }}
               transition={{ duration: 0.35, ease: 'easeOut' }}
-              className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch"
+              className={`grid grid-cols-1 lg:grid-cols-12 ${
+                isHomePage ? 'gap-4 lg:gap-5' : 'gap-6 lg:gap-8'
+              } items-stretch`}
             >
               {/* Left Column: Interactive Inputs */}
               <div
-                className="lg:col-span-7 rounded-[28px] p-6 sm:p-8 border border-[#C9A24B]/30 backdrop-blur-md flex flex-col justify-between space-y-6 shadow-[0_20px_50px_rgba(0,0,0,0.35)]"
+                className={`lg:col-span-7 ${
+                  isHomePage ? 'rounded-[20px] p-4 sm:p-5 space-y-4' : 'rounded-[28px] p-6 sm:p-8 space-y-6'
+                } border border-[#C9A24B]/30 backdrop-blur-md flex flex-col justify-between shadow-[0_20px_50px_rgba(0,0,0,0.35)]`}
                 style={{
                   backgroundColor: 'rgba(5, 34, 24, 0.68)',
                 }}
@@ -710,7 +734,9 @@ export default function GheeUsagePuritySection() {
 
               {/* Right Column: Dynamic Recommendation Result Card */}
               <div
-                className="lg:col-span-5 rounded-[28px] p-6 sm:p-8 border border-[#E8D08B]/40 backdrop-blur-lg flex flex-col justify-between space-y-6 shadow-[0_25px_60px_rgba(201,162,75,0.18)] relative overflow-hidden"
+                className={`lg:col-span-5 ${
+                  isHomePage ? 'rounded-[20px] p-4 sm:p-5 space-y-4' : 'rounded-[28px] p-6 sm:p-8 space-y-6'
+                } border border-[#E8D08B]/40 backdrop-blur-lg flex flex-col justify-between shadow-[0_25px_60px_rgba(201,162,75,0.18)] relative overflow-hidden`}
                 style={{
                   backgroundColor: 'rgba(7, 43, 31, 0.82)',
                 }}
@@ -735,7 +761,9 @@ export default function GheeUsagePuritySection() {
                       key={calculationResult.label}
                       initial={{ scale: 0.95, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
-                      className="font-editorial text-3xl sm:text-4xl lg:text-5xl font-bold text-[#E8D08B] leading-none"
+                      className={`font-editorial ${
+                        isHomePage ? 'text-3xl sm:text-4xl' : 'text-3xl sm:text-4xl lg:text-5xl'
+                      } font-bold text-[#E8D08B] leading-none`}
                     >
                       {isHi ? calculationResult.labelHi : calculationResult.label}
                     </motion.div>
@@ -745,7 +773,11 @@ export default function GheeUsagePuritySection() {
                   </div>
 
                   {/* Recommended Pack Breakdown Card */}
-                  <div className="p-4 rounded-2xl bg-[#031911]/90 border border-[#C9A24B]/35 space-y-3">
+                  <div
+                    className={`${
+                      isHomePage ? 'p-3 rounded-xl space-y-2' : 'p-4 rounded-2xl space-y-3'
+                    } bg-[#031911]/90 border border-[#C9A24B]/35`}
+                  >
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 rounded-xl overflow-hidden border border-[#E8D08B]/50 bg-[#072419] shrink-0 shadow-sm">
                         <img
@@ -793,7 +825,9 @@ export default function GheeUsagePuritySection() {
                   <button
                     type="button"
                     onClick={handleAddToCart}
-                    className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-[#C9A24B] via-[#E8D08B] to-[#C9A24B] text-[#0A261B] text-sm font-bold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98]"
+                    className={`w-full ${
+                      isHomePage ? 'py-2.5 px-4 text-xs' : 'py-3.5 px-6 text-sm'
+                    } rounded-xl bg-gradient-to-r from-[#C9A24B] via-[#E8D08B] to-[#C9A24B] text-[#0A261B] font-bold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98]`}
                   >
                     {addedSuccess ? (
                       <>

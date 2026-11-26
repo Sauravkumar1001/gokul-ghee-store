@@ -20,7 +20,7 @@ export default function FeaturedGheeSection() {
 
   return (
     <SectionSurface tone="white" className="relative">
-      <Container className="space-y-10 relative z-10">
+      <Container className="space-y-6 sm:space-y-8 relative z-10">
         <SectionHeading
           variant="centered"
           eyebrow={language === 'en' ? 'The Heart of Gokul Ghee' : t('home.featuredGhee.eyebrow')}

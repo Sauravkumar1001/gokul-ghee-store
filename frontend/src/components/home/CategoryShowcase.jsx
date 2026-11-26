@@ -15,7 +15,7 @@ export default function CategoryShowcase() {
 
   return (
     <SectionSurface id="featured-categories" tone="cream">
-      <Container className="space-y-10">
+      <Container className="space-y-6 sm:space-y-8">
         <SectionHeading
           variant="centered"
           eyebrow={

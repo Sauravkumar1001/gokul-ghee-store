@@ -31,7 +31,7 @@ export default function WhyChooseSection() {
         <div className="absolute -bottom-24 -right-20 w-96 h-96 rounded-full bg-[#059669]/18 blur-[90px] animate-blob-2" />
       </div>
 
-      <Container className="space-y-12 relative z-10">
+      <Container className="space-y-6 sm:space-y-8 relative z-10">
         <SectionHeading
           variant="centered"
           dark

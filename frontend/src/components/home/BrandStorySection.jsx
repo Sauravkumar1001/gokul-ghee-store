@@ -15,7 +15,7 @@ export default function BrandStorySection() {
         className="pointer-events-none absolute -bottom-24 -left-20 w-[480px] h-[480px] rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.12)_0%,rgba(251,247,238,0)_70%)]"
       />
 
-      <Container className="space-y-10 relative z-10">
+      <Container className="space-y-6 sm:space-y-8 relative z-10">
         <SectionHeading
           variant="centered"
           eyebrow={language === 'en' ? 'Rooted in Danapur' : t('home.brandStory.eyebrow')}

@@ -19,7 +19,7 @@ export default function InstagramSection() {
 
   return (
     <SectionSurface tone="white" className="border-t border-[#E6DEC9]">
-      <Container className="space-y-10">
+      <Container className="space-y-6 sm:space-y-8">
         <SectionHeading
           variant="centered"
           eyebrow={language === 'en' ? 'Visual Journal' : t('home.instagram.eyebrow')}

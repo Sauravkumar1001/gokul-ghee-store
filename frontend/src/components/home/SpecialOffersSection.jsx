@@ -81,7 +81,7 @@ export default function SpecialOffersSection() {
 
   return (
     <SectionSurface tone="white">
-      <Container className="space-y-10">
+      <Container className="space-y-6 sm:space-y-8">
         <SectionHeading
           variant="centered"
           eyebrow={language === 'en' ? 'Seasonal & Gifting' : t('home.specialOffers.eyebrow')}

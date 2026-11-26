@@ -28,7 +28,7 @@ export default function VerifiedReviewsSection() {
 
   return (
     <SectionSurface tone="sand" className="border-y border-[#E6DEC9]/70 relative">
-      <Container className="space-y-10 relative z-10">
+      <Container className="space-y-6 sm:space-y-8 relative z-10">
         <SectionHeading
           variant="centered"
           eyebrow={language === 'en' ? 'Verified Sources Only' : t('home.verifiedReviews.eyebrow')}

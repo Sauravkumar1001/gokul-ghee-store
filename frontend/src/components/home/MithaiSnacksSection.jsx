@@ -33,34 +33,23 @@ export default function MithaiSnacksSection() {
 
   return (
     <SectionSurface tone="cream" withGrain className="border-t border-[#E6DEC9]/70 relative">
-      <Container className="space-y-8 relative z-10">
-        <div className="flex flex-col items-center">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FFFDF8]/90 border border-[#C9A24B]/40 text-[#9C7725] text-xs font-bold tracking-wider uppercase backdrop-blur-sm shadow-xs mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-[#C9A24B]" />
-            <span>
-              {isHi
-                ? 'आनंद बाजार की ताज़ा मिठास • प्रतिदिन ताजा तैयार'
-                : 'Fresh Counter Craft • Handcrafted Daily'}
-            </span>
-          </div>
-
-          <SectionHeading
-            variant="centered"
-            eyebrow={language === 'en' ? 'Counter & Pantry Delicacies' : t('home.mithaiSnacks.eyebrow')}
-            title={
-              language === 'en'
-                ? 'Mithai & Traditional Snacks Showcase'
-                : t('home.mithaiSnacks.title')
-            }
-            subtitle={
-              language === 'en'
-                ? 'Celebrate everyday hospitality with golden Motichoor Laddoo, Kaju Katli, fresh Samosas, and crunchy artisanal Namkeen.'
-                : t('home.mithaiSnacks.subtitle')
-            }
-            actionLabel={language === 'en' ? 'Explore Mithai' : t('home.mithaiSnacks.mithaiCta')}
-            actionTo="/shop/mithai"
-          />
-        </div>
+      <Container className="space-y-6 sm:space-y-8 relative z-10">
+        <SectionHeading
+          variant="centered"
+          eyebrow={language === 'en' ? 'Counter & Pantry Delicacies • Anand Bazar Fresh' : t('home.mithaiSnacks.eyebrow')}
+          title={
+            language === 'en'
+              ? 'Mithai & Traditional Snacks Showcase'
+              : t('home.mithaiSnacks.title')
+          }
+          subtitle={
+            language === 'en'
+              ? 'Celebrate everyday hospitality with golden Motichoor Laddoo, Kaju Katli, fresh Samosas, and crunchy artisanal Namkeen.'
+              : t('home.mithaiSnacks.subtitle')
+          }
+          actionLabel={language === 'en' ? 'Explore Mithai' : t('home.mithaiSnacks.mithaiCta')}
+          actionTo="/shop/mithai"
+        />
 
         <div
           className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5"

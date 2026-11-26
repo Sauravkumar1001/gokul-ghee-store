@@ -104,7 +104,7 @@ export default function HomePage() {
         <CategoryShowcase />
         <BestsellingSection />
         <FeaturedGheeSection />
-        <GheeUsagePuritySection />
+        <GheeUsagePuritySection isHomePage={true} />
         <MithaiSnacksSection />
         <WhyChooseSection />
         <BrandStorySection />
