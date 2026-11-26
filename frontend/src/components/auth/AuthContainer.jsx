@@ -487,9 +487,6 @@ export default function AuthContainer({ initialMode = 'login' }) {
   // Shared State
   const [formError, setFormError] = useState('');
   const [apiFeedback, setApiFeedback] = useState('');
-  const [showGooglePrompt, setShowGooglePrompt] = useState(false);
-  const [googleEmailInput, setGoogleEmailInput] = useState('');
-  const [googleNameInput, setGoogleNameInput] = useState('');
   const [googleNotice, setGoogleNotice] = useState('');
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -747,96 +744,152 @@ export default function AuthContainer({ initialMode = 'login' }) {
   };
 
   /* ---------------- Google One-Tap & GIS Initialization ---------------- */
+  const processGoogleAuth = useCallback(
+    async ({ credential, email, name }) => {
+      setIsGoogleLoading(true);
+      setFormError('');
+      setApiFeedback('');
+
+      try {
+        const res = await googleLogin({
+          credential,
+          email,
+          name: name || (email ? email.split('@')[0] : 'Gokul Customer'),
+        });
+
+        if (res.ok) {
+          setIsSuccess(true);
+          setGoogleNotice(
+            isHi
+              ? 'गूगल द्वारा प्रमाणीकरण सफल! आपका स्वागत है...'
+              : 'Google authentication successful! Redirecting...'
+          );
+          setTimeout(() => {
+            navigate(redirectTarget);
+          }, 500);
+        } else {
+          if (res.error?.isNetworkError) {
+            setApiFeedback(
+              isHi
+                ? 'सर्वर से संपर्क नहीं हो सका। कृपया बाद में पुनः प्रयास करें।'
+                : "Could not reach the server. Please check your connection and try again."
+            );
+          } else {
+            setApiFeedback(res.error?.message || 'Google sign-in failed. Please try again.');
+          }
+        }
+      } catch (err) {
+        setApiFeedback(err.message || 'An error occurred during Google sign-in.');
+      } finally {
+        setIsGoogleLoading(false);
+      }
+    },
+    [googleLogin, isHi, navigate, redirectTarget]
+  );
+
   useEffect(() => {
     const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
     if (!googleClientId || typeof window === 'undefined') return;
 
-    const existingScript = document.getElementById('google-gsi-client');
-    if (!existingScript) {
-      const script = document.createElement('script');
-      script.id = 'google-gsi-client';
-      script.src = 'https://accounts.google.com/gsi/client';
-      script.async = true;
-      script.defer = true;
-      script.onload = () => {
-        if (window.google?.accounts?.id) {
-          window.google.accounts.id.initialize({
-            client_id: googleClientId,
-            callback: async (response) => {
-              if (response?.credential) {
-                await processGoogleAuth({ credential: response.credential });
-              }
-            },
-          });
-        }
-      };
-      document.body.appendChild(script);
-    }
-  }, []);
+    const setupGIS = () => {
+      if (!window.google?.accounts?.id) return;
+      try {
+        window.google.accounts.id.initialize({
+          client_id: googleClientId,
+          callback: async (response) => {
+            if (response?.credential) {
+              await processGoogleAuth({ credential: response.credential });
+            }
+          },
+          auto_select: false,
+          cancel_on_tap_outside: true,
+        });
 
-  const processGoogleAuth = async ({ credential, email, name }) => {
-    setIsGoogleLoading(true);
-    setFormError('');
-    setApiFeedback('');
-
-    try {
-      const res = await googleLogin({
-        credential,
-        email,
-        name: name || (email ? email.split('@')[0] : 'Gokul Customer'),
-      });
-
-      if (res.ok) {
-        setIsSuccess(true);
-        setShowGooglePrompt(false);
-        setGoogleNotice(
-          isHi
-            ? 'गूगल द्वारा प्रमाणीकरण सफल! आपका स्वागत है...'
-            : 'Google authentication successful! Redirecting...'
-        );
-        setTimeout(() => {
-          navigate(redirectTarget);
-        }, 500);
-      } else {
-        if (res.error?.isNetworkError) {
-          setApiFeedback(
-            isHi
-              ? 'सर्वर से संपर्क नहीं हो सका। कृपया बाद में पुनः प्रयास करें।'
-              : "Could not reach the server. Please check your connection and try again."
-          );
-        } else {
-          setApiFeedback(res.error?.message || 'Google sign-in failed. Please try again.');
-        }
+        // Trigger Google One-Tap
+        window.google.accounts.id.prompt();
+      } catch (err) {
+        console.warn('Google Identity initialization error:', err);
       }
-    } catch (err) {
-      setApiFeedback(err.message || 'An error occurred during Google sign-in.');
-    } finally {
-      setIsGoogleLoading(false);
-    }
-  };
+    };
 
-  const handleGoogleSignIn = async () => {
-    // 1. If Google GIS (official Google Identity Services) is available with client id
+    if (window.google?.accounts?.id) {
+      setupGIS();
+    } else {
+      const timer = setInterval(() => {
+        if (window.google?.accounts?.id) {
+          clearInterval(timer);
+          setupGIS();
+        }
+      }, 400);
+      return () => clearInterval(timer);
+    }
+  }, [processGoogleAuth]);
+
+  const handleGoogleSignIn = () => {
     const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-    if (googleClientId && window.google?.accounts?.id) {
+
+    if (!googleClientId) {
+      setApiFeedback(
+        isHi
+          ? 'सीधे Google का पॉप-अप खोलने के लिए Google Client ID आवश्यक है। कृपया .env में VITE_GOOGLE_CLIENT_ID सेट करें।'
+          : 'To open Google Sign-in directly, please configure VITE_GOOGLE_CLIENT_ID in your environment.'
+      );
+      return;
+    }
+
+    // 1. Google OAuth2 Token Client: natively triggers authentic Google account popup
+    if (window.google?.accounts?.oauth2) {
+      try {
+        const tokenClient = window.google.accounts.oauth2.initTokenClient({
+          client_id: googleClientId,
+          scope: 'email profile openid',
+          callback: async (tokenResponse) => {
+            if (tokenResponse?.access_token) {
+              setIsGoogleLoading(true);
+              try {
+                const userRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                  headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+                });
+                const profile = await userRes.json();
+                if (profile?.email) {
+                  await processGoogleAuth({
+                    email: profile.email,
+                    name: profile.name || profile.email.split('@')[0],
+                  });
+                } else {
+                  setApiFeedback('Could not retrieve profile from Google.');
+                }
+              } catch {
+                setApiFeedback('Failed to fetch Google profile info.');
+              } finally {
+                setIsGoogleLoading(false);
+              }
+            } else if (tokenResponse?.error) {
+              setApiFeedback(`Google Sign-in error: ${tokenResponse.error}`);
+            }
+          },
+        });
+        tokenClient.requestAccessToken({ prompt: 'select_account' });
+        return;
+      } catch (err) {
+        console.warn('Token client launch failed, falling back:', err);
+      }
+    }
+
+    // 2. Google Identity Services One Tap prompt
+    if (window.google?.accounts?.id) {
       window.google.accounts.id.prompt();
       return;
     }
 
-    // 2. Check if user already typed an email into the active form
-    const currentTypedEmail = activeTab === 'login' ? loginEmail.trim() : regForm.email.trim();
-    const currentTypedName = activeTab === 'register' ? regForm.name.trim() : '';
-
-    if (currentTypedEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(currentTypedEmail)) {
-      // Fast-track: directly sign in with the typed Google email!
-      await processGoogleAuth({ email: currentTypedEmail, name: currentTypedName });
-      return;
-    }
-
-    // 3. Otherwise, smoothly toggle open the interactive Google Account prompt
-    setGoogleEmailInput(currentTypedEmail || '');
-    setGoogleNameInput(currentTypedName || '');
-    setShowGooglePrompt((prev) => !prev);
+    // 3. Direct Google OAuth2 popup fallback
+    const redirectUri = window.location.origin + '/login';
+    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(
+      googleClientId
+    )}&redirect_uri=${encodeURIComponent(
+      redirectUri
+    )}&response_type=token%20id_token&scope=openid%20email%20profile&prompt=select_account&nonce=${Date.now()}`;
+    window.open(authUrl, 'GoogleSignIn', 'width=500,height=620,left=150,top=100');
   };
 
   return (
@@ -1156,105 +1209,8 @@ export default function AuthContainer({ initialMode = 'login' }) {
                   </motion.div>
                 )}
 
-                {/* Instant Google Account Selection Prompt */}
-                <AnimatePresence>
-                  {showGooglePrompt && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0, scale: 0.98 }}
-                      animate={{ opacity: 1, height: 'auto', scale: 1 }}
-                      exit={{ opacity: 0, height: 0, scale: 0.98 }}
-                      transition={{ duration: 0.2 }}
-                      className="overflow-hidden rounded-2xl bg-white/95 border border-[#C9A24B]/60 p-3.5 shadow-md space-y-3"
-                    >
-                      <div className="flex items-center justify-between border-b border-[#E6DEC9] pb-2">
-                        <div className="flex items-center gap-2">
-                          <GoogleIcon />
-                          <span className="text-xs font-bold text-[#0F3D2E]">
-                            {isHi ? 'Google खाता साइन इन / रजिस्टर' : 'Sign in with Google Account'}
-                          </span>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => setShowGooglePrompt(false)}
-                          className="text-xs text-[#7A7468] hover:text-[#0F3D2E] p-1 font-bold"
-                          aria-label="Close"
-                        >
-                          ✕
-                        </button>
-                      </div>
-
-                      <p className="text-[11px] text-[#5A554C] leading-snug">
-                        {activeTab === 'login'
-                          ? isHi
-                            ? 'अपने Google ईमेल से 1-क्लिक में साइन इन करें:'
-                            : 'Sign in to your account instantly with your Google email:'
-                          : isHi
-                            ? 'अपने Google ईमेल से 1-क्लिक में नया खाता बनाएं:'
-                            : 'Create your Gokul Ghee account instantly with your Google email:'}
-                      </p>
-
-                      <div className="space-y-2">
-                        <input
-                          type="email"
-                          value={googleEmailInput}
-                          onChange={(e) => setGoogleEmailInput(e.target.value)}
-                          placeholder="example@gmail.com"
-                          className="w-full px-3 py-2 text-xs rounded-xl border border-[#C9A24B]/40 bg-[#FFFDF8] text-[#1B1B1B] focus:outline-none focus:ring-2 focus:ring-[#C9A24B]/50"
-                          autoFocus
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              e.preventDefault();
-                              if (googleEmailInput.trim()) {
-                                processGoogleAuth({
-                                  email: googleEmailInput.trim(),
-                                  name: googleNameInput.trim() || undefined,
-                                });
-                              }
-                            }
-                          }}
-                        />
-
-                        {activeTab === 'register' && (
-                          <input
-                            type="text"
-                            value={googleNameInput}
-                            onChange={(e) => setGoogleNameInput(e.target.value)}
-                            placeholder={isHi ? 'आपका पूरा नाम (वैकल्पिक)' : 'Your Full Name (optional)'}
-                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#C9A24B]/40 bg-[#FFFDF8] text-[#1B1B1B] focus:outline-none focus:ring-2 focus:ring-[#C9A24B]/50"
-                          />
-                        )}
-
-                        <div className="flex items-center gap-2 pt-1">
-                          <button
-                            type="button"
-                            disabled={isGoogleLoading || !googleEmailInput.trim()}
-                            onClick={() =>
-                              processGoogleAuth({
-                                email: googleEmailInput.trim(),
-                                name: googleNameInput.trim() || undefined,
-                              })
-                            }
-                            className="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-[#C9A24B] to-[#E8D08B] text-[#0F3D2E] text-xs font-bold shadow-xs hover:shadow cursor-pointer disabled:opacity-50 flex items-center justify-center gap-1.5"
-                          >
-                            {isGoogleLoading ? (
-                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            ) : (
-                              <GoogleIcon />
-                            )}
-                            <span>{isHi ? 'साइन इन करें' : 'Continue'}</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setShowGooglePrompt(false)}
-                            className="px-3 py-2 rounded-xl text-xs font-medium text-[#7A7468] hover:bg-gray-100"
-                          >
-                            {isHi ? 'रद्द करें' : 'Cancel'}
-                          </button>
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {/* Google Official Button Container (rendered when client ID is active) */}
+                <div id="google-official-btn" className="w-full flex justify-center empty:hidden" />
               </div>
 
               {/* Centered 'OR WITH EMAIL' divider with balanced hairlines */}
