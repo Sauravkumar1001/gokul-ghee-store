@@ -903,15 +903,15 @@ export default function AuthContainer({ initialMode = 'login' }) {
           - Gold sparkle particles floating upward (max 15, CSS only)
          ================================================================= */}
       <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-        {/* Background photo */}
+        {/* Divine Gokul Krishna & Sacred Cows Background Photo */}
         <img
-          src="/images/cat-desi-ghee.jpg"
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover scale-110 filter blur-[24px]"
+          src="/images/krishna-gokul.jpg"
+          alt="Shree Krishna with Sacred Cows in Gokul"
+          className="absolute inset-0 w-full h-full object-cover object-center scale-110 filter blur-[10px] sm:blur-[14px] brightness-[0.72] contrast-[1.08]"
         />
 
-        {/* Deep green gradient overlay (about 70% opacity) */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#02170F]/85 via-[#042419]/72 to-[#063323]/80" />
+        {/* Ambient Vedic Emerald & Forest Green Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#02170F]/90 via-[#032317]/55 to-[#02170F]/85" />
 
         {/* 3-4 big soft blurred gold / emerald light blobs (blur 80px) */}
         {!reducedMotion && (
@@ -1017,8 +1017,24 @@ export default function AuthContainer({ initialMode = 'login' }) {
                 </p>
               </div>
 
-              {/* Floating Product Badges Showcase */}
-              <FloatingProductShowcase reducedMotion={reducedMotion} />
+              {/* Divine Gokul Heritage Showcase Card */}
+              <div className="relative my-3 rounded-2xl overflow-hidden border border-[#E8D08B]/40 shadow-[0_12px_28px_rgba(0,0,0,0.45)] group bg-[#072419]">
+                <img
+                  src="/images/krishna-gokul.jpg"
+                  alt="Lord Krishna with Sacred Cows in Gokul"
+                  className="w-full h-44 object-cover object-top scale-100 group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#02170F] via-[#02170F]/20 to-transparent" />
+                <div className="absolute bottom-2.5 inset-x-3 flex items-center justify-between">
+                  <span className="text-[11px] font-bold text-[#FDE68A] tracking-wide flex items-center gap-1.5 drop-shadow">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#E8D08B] animate-pulse" />
+                    श्री गोकुल धाम परंपरा
+                  </span>
+                  <span className="text-[10px] font-semibold text-[#FBF7EE] bg-[#0F3D2E]/85 backdrop-blur-xs px-2.5 py-0.5 rounded-full border border-[#C9A24B]/40">
+                    100% शुद्ध देशी गाय का घी
+                  </span>
+                </div>
+              </div>
             </div>
 
             {/* Rotating Benefit Testimonial Component */}
@@ -1048,26 +1064,30 @@ export default function AuthContainer({ initialMode = 'login' }) {
           <div
             className="lg:col-span-7 p-5 sm:p-8 lg:p-10 flex flex-col justify-center gg-glass-form-panel"
             style={{
-              backgroundColor: 'rgba(255, 252, 245, 0.55)',
-              backdropFilter: 'blur(14px)',
-              WebkitBackdropFilter: 'blur(14px)',
+              backgroundColor: 'rgba(255, 252, 245, 0.65)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
             }}
           >
             <div className="max-w-md w-full mx-auto space-y-4">
               {/* Mobile-only compact animated brand header */}
               <div className="lg:hidden pb-3 border-b border-[#E6DEC9] flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="w-8 h-8 rounded-full bg-gradient-to-br from-[#D8B45E] to-[#8C6826] text-[#0F3D2E] flex items-center justify-center font-editorial font-bold text-sm shadow-xs">
-                    ग
-                  </span>
+                <div className="flex items-center gap-2.5">
+                  <div className="w-10 h-10 rounded-full overflow-hidden border border-[#C9A24B]/60 shadow-xs shrink-0 bg-[#072419]">
+                    <img
+                      src="/images/krishna-gokul.jpg"
+                      alt="Gokul Heritage"
+                      className="w-full h-full object-cover object-top"
+                    />
+                  </div>
                   <div>
                     <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#9A7624] block">
                       {STORE_CONFIG.brandDisplayName}
                     </span>
-                    <p className="text-[10px] text-[#5A554C]">Anand Bazar, Danapur</p>
+                    <p className="text-[10px] text-[#5A554C]">Anand Bazar, Danapur • शुद्ध देशी घी</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-1 text-[10px] font-bold text-[#0F3D2E] bg-[#F3EAD7] px-2 py-1 rounded-full border border-[#C9A24B]/30">
+                <div className="flex items-center gap-1 text-[10px] font-bold text-[#0F3D2E] bg-[#F3EAD7] px-2.5 py-1 rounded-full border border-[#C9A24B]/30">
                   <Star className="w-3 h-3 text-[#F59E0B] fill-[#F59E0B]" />
                   <span>4.9 Rating</span>
                 </div>
