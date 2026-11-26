@@ -9,6 +9,7 @@ import {
   Eye,
   EyeOff,
   Heart,
+  Loader2,
   Lock,
   Mail,
   MapPin,
@@ -459,7 +460,7 @@ export default function AuthContainer({ initialMode = 'login' }) {
   const reducedMotion = useReducedMotion();
 
   const [activeTab, setActiveTab] = useState(initialMode);
-  const { login, register, isLoading } = useAuth();
+  const { login, register, googleLogin, isLoading } = useAuth();
   const hasTurnstileKey = Boolean(import.meta.env.VITE_TURNSTILE_SITE_KEY);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -475,6 +476,7 @@ export default function AuthContainer({ initialMode = 'login' }) {
     setActiveTab(mode);
     setFormError('');
     setApiFeedback('');
+    setShowGooglePrompt(false);
     // Seamless URL update without page flash
     const targetUrl = rawNext
       ? `/${mode}?next=${encodeURIComponent(rawNext)}`
@@ -485,7 +487,11 @@ export default function AuthContainer({ initialMode = 'login' }) {
   // Shared State
   const [formError, setFormError] = useState('');
   const [apiFeedback, setApiFeedback] = useState('');
+  const [showGooglePrompt, setShowGooglePrompt] = useState(false);
+  const [googleEmailInput, setGoogleEmailInput] = useState('');
+  const [googleNameInput, setGoogleNameInput] = useState('');
   const [googleNotice, setGoogleNotice] = useState('');
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [captchaData, setCaptchaData] = useState({ captchaToken: '', captchaAnswer: '' });
   const [captchaResetCount, setCaptchaResetCount] = useState(0);
@@ -740,15 +746,97 @@ export default function AuthContainer({ initialMode = 'login' }) {
     }
   };
 
-  const handleGoogleSignIn = () => {
-    setGoogleNotice(
-      isHi
-        ? 'गूगल ऑथेंटिकेशन सेटअप प्रगति पर है। कृपया नीचे ईमेल व पासवर्ड से साइन इन करें।'
-        : 'Google Sign-in is being connected. Please sign in below using your email and password.'
-    );
-    setTimeout(() => {
-      setGoogleNotice('');
-    }, 5000);
+  /* ---------------- Google One-Tap & GIS Initialization ---------------- */
+  useEffect(() => {
+    const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    if (!googleClientId || typeof window === 'undefined') return;
+
+    const existingScript = document.getElementById('google-gsi-client');
+    if (!existingScript) {
+      const script = document.createElement('script');
+      script.id = 'google-gsi-client';
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+      script.onload = () => {
+        if (window.google?.accounts?.id) {
+          window.google.accounts.id.initialize({
+            client_id: googleClientId,
+            callback: async (response) => {
+              if (response?.credential) {
+                await processGoogleAuth({ credential: response.credential });
+              }
+            },
+          });
+        }
+      };
+      document.body.appendChild(script);
+    }
+  }, []);
+
+  const processGoogleAuth = async ({ credential, email, name }) => {
+    setIsGoogleLoading(true);
+    setFormError('');
+    setApiFeedback('');
+
+    try {
+      const res = await googleLogin({
+        credential,
+        email,
+        name: name || (email ? email.split('@')[0] : 'Gokul Customer'),
+      });
+
+      if (res.ok) {
+        setIsSuccess(true);
+        setShowGooglePrompt(false);
+        setGoogleNotice(
+          isHi
+            ? 'गूगल द्वारा प्रमाणीकरण सफल! आपका स्वागत है...'
+            : 'Google authentication successful! Redirecting...'
+        );
+        setTimeout(() => {
+          navigate(redirectTarget);
+        }, 500);
+      } else {
+        if (res.error?.isNetworkError) {
+          setApiFeedback(
+            isHi
+              ? 'सर्वर से संपर्क नहीं हो सका। कृपया बाद में पुनः प्रयास करें।'
+              : "Could not reach the server. Please check your connection and try again."
+          );
+        } else {
+          setApiFeedback(res.error?.message || 'Google sign-in failed. Please try again.');
+        }
+      }
+    } catch (err) {
+      setApiFeedback(err.message || 'An error occurred during Google sign-in.');
+    } finally {
+      setIsGoogleLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    // 1. If Google GIS (official Google Identity Services) is available with client id
+    const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    if (googleClientId && window.google?.accounts?.id) {
+      window.google.accounts.id.prompt();
+      return;
+    }
+
+    // 2. Check if user already typed an email into the active form
+    const currentTypedEmail = activeTab === 'login' ? loginEmail.trim() : regForm.email.trim();
+    const currentTypedName = activeTab === 'register' ? regForm.name.trim() : '';
+
+    if (currentTypedEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(currentTypedEmail)) {
+      // Fast-track: directly sign in with the typed Google email!
+      await processGoogleAuth({ email: currentTypedEmail, name: currentTypedName });
+      return;
+    }
+
+    // 3. Otherwise, smoothly toggle open the interactive Google Account prompt
+    setGoogleEmailInput(currentTypedEmail || '');
+    setGoogleNameInput(currentTypedName || '');
+    setShowGooglePrompt((prev) => !prev);
   };
 
   return (
@@ -1022,15 +1110,28 @@ export default function AuthContainer({ initialMode = 'login' }) {
                 </div>
               )}
 
-              {/* Google Sign-in Full-Width Button */}
-              <div className="space-y-2">
+              {/* Google Sign-in Full-Width Button & Interactive Dialog */}
+              <div className="space-y-2.5">
                 <button
                   type="button"
                   onClick={handleGoogleSignIn}
-                  className="w-full py-2.5 px-4 rounded-2xl border border-[#C9A24B]/35 bg-white/80 hover:bg-white text-xs font-semibold text-[#1B1B1B] flex items-center justify-center gap-2.5 transition-all duration-200 shadow-xs hover:shadow hover:border-[#C9A24B]/70 cursor-pointer backdrop-blur-xs"
+                  disabled={isGoogleLoading || isLoading || isSuccess}
+                  className="w-full py-2.5 px-4 rounded-2xl border border-[#C9A24B]/35 bg-white/85 hover:bg-white text-xs font-semibold text-[#1B1B1B] flex items-center justify-center gap-2.5 transition-all duration-200 shadow-xs hover:shadow hover:border-[#C9A24B]/70 cursor-pointer disabled:opacity-60 backdrop-blur-xs"
                 >
-                  <GoogleIcon />
-                  <span>Continue with Google</span>
+                  {isGoogleLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin text-[#0F3D2E]" />
+                  ) : (
+                    <GoogleIcon />
+                  )}
+                  <span>
+                    {isGoogleLoading
+                      ? isHi
+                        ? 'गूगल से जुड़ रहे हैं...'
+                        : 'Connecting with Google...'
+                      : isHi
+                        ? 'Google के साथ जारी रखें'
+                        : 'Continue with Google'}
+                  </span>
                 </button>
 
                 {/* Optional temporary Google notice if clicked */}
@@ -1054,6 +1155,106 @@ export default function AuthContainer({ initialMode = 'login' }) {
                     </button>
                   </motion.div>
                 )}
+
+                {/* Instant Google Account Selection Prompt */}
+                <AnimatePresence>
+                  {showGooglePrompt && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0, scale: 0.98 }}
+                      animate={{ opacity: 1, height: 'auto', scale: 1 }}
+                      exit={{ opacity: 0, height: 0, scale: 0.98 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden rounded-2xl bg-white/95 border border-[#C9A24B]/60 p-3.5 shadow-md space-y-3"
+                    >
+                      <div className="flex items-center justify-between border-b border-[#E6DEC9] pb-2">
+                        <div className="flex items-center gap-2">
+                          <GoogleIcon />
+                          <span className="text-xs font-bold text-[#0F3D2E]">
+                            {isHi ? 'Google खाता साइन इन / रजिस्टर' : 'Sign in with Google Account'}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setShowGooglePrompt(false)}
+                          className="text-xs text-[#7A7468] hover:text-[#0F3D2E] p-1 font-bold"
+                          aria-label="Close"
+                        >
+                          ✕
+                        </button>
+                      </div>
+
+                      <p className="text-[11px] text-[#5A554C] leading-snug">
+                        {activeTab === 'login'
+                          ? isHi
+                            ? 'अपने Google ईमेल से 1-क्लिक में साइन इन करें:'
+                            : 'Sign in to your account instantly with your Google email:'
+                          : isHi
+                            ? 'अपने Google ईमेल से 1-क्लिक में नया खाता बनाएं:'
+                            : 'Create your Gokul Ghee account instantly with your Google email:'}
+                      </p>
+
+                      <div className="space-y-2">
+                        <input
+                          type="email"
+                          value={googleEmailInput}
+                          onChange={(e) => setGoogleEmailInput(e.target.value)}
+                          placeholder="example@gmail.com"
+                          className="w-full px-3 py-2 text-xs rounded-xl border border-[#C9A24B]/40 bg-[#FFFDF8] text-[#1B1B1B] focus:outline-none focus:ring-2 focus:ring-[#C9A24B]/50"
+                          autoFocus
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              if (googleEmailInput.trim()) {
+                                processGoogleAuth({
+                                  email: googleEmailInput.trim(),
+                                  name: googleNameInput.trim() || undefined,
+                                });
+                              }
+                            }
+                          }}
+                        />
+
+                        {activeTab === 'register' && (
+                          <input
+                            type="text"
+                            value={googleNameInput}
+                            onChange={(e) => setGoogleNameInput(e.target.value)}
+                            placeholder={isHi ? 'आपका पूरा नाम (वैकल्पिक)' : 'Your Full Name (optional)'}
+                            className="w-full px-3 py-2 text-xs rounded-xl border border-[#C9A24B]/40 bg-[#FFFDF8] text-[#1B1B1B] focus:outline-none focus:ring-2 focus:ring-[#C9A24B]/50"
+                          />
+                        )}
+
+                        <div className="flex items-center gap-2 pt-1">
+                          <button
+                            type="button"
+                            disabled={isGoogleLoading || !googleEmailInput.trim()}
+                            onClick={() =>
+                              processGoogleAuth({
+                                email: googleEmailInput.trim(),
+                                name: googleNameInput.trim() || undefined,
+                              })
+                            }
+                            className="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-[#C9A24B] to-[#E8D08B] text-[#0F3D2E] text-xs font-bold shadow-xs hover:shadow cursor-pointer disabled:opacity-50 flex items-center justify-center gap-1.5"
+                          >
+                            {isGoogleLoading ? (
+                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            ) : (
+                              <GoogleIcon />
+                            )}
+                            <span>{isHi ? 'साइन इन करें' : 'Continue'}</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setShowGooglePrompt(false)}
+                            className="px-3 py-2 rounded-xl text-xs font-medium text-[#7A7468] hover:bg-gray-100"
+                          >
+                            {isHi ? 'रद्द करें' : 'Cancel'}
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* Centered 'OR WITH EMAIL' divider with balanced hairlines */}

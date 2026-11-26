@@ -53,6 +53,19 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
+  const googleLogin = useCallback(async (payload) => {
+    setIsLoading(true);
+    try {
+      const result = await authService.googleAuth(payload);
+      if (result.ok && result.data?.user) {
+        setUser(result.data.user);
+      }
+      return result;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   const logout = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -73,9 +86,10 @@ export function AuthProvider({ children }) {
       isHydrating,
       login,
       register,
+      googleLogin,
       logout,
     }),
-    [user, isLoading, isHydrating, login, register, logout]
+    [user, isLoading, isHydrating, login, register, googleLogin, logout]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

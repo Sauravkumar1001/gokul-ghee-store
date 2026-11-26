@@ -28,6 +28,15 @@ export const authService = {
     }
   },
 
+  async googleAuth(payload) {
+    try {
+      const { data } = await apiClient.post('/auth/google', payload);
+      return { ok: true, data };
+    } catch (error) {
+      return { ok: false, error: normalizeApiError(error) };
+    }
+  },
+
   async logout() {
     try {
       await apiClient.post('/auth/logout');
