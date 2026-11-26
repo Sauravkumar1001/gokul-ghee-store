@@ -485,6 +485,7 @@ export default function AuthContainer({ initialMode = 'login' }) {
   // Shared State
   const [formError, setFormError] = useState('');
   const [apiFeedback, setApiFeedback] = useState('');
+  const [googleNotice, setGoogleNotice] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
   const [captchaData, setCaptchaData] = useState({ captchaToken: '', captchaAnswer: '' });
   const [captchaResetCount, setCaptchaResetCount] = useState(0);
@@ -740,11 +741,18 @@ export default function AuthContainer({ initialMode = 'login' }) {
   };
 
   const handleGoogleSignIn = () => {
-    setApiFeedback('Google sign-in is enabled for your store. Select your Google account to proceed.');
+    setGoogleNotice(
+      isHi
+        ? 'गूगल ऑथेंटिकेशन सेटअप प्रगति पर है। कृपया नीचे ईमेल व पासवर्ड से साइन इन करें।'
+        : 'Google Sign-in is being connected. Please sign in below using your email and password.'
+    );
+    setTimeout(() => {
+      setGoogleNotice('');
+    }, 5000);
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-80px)] w-full py-5 sm:py-10 flex items-center justify-center px-3 sm:px-6 lg:px-8 overflow-hidden">
+    <div className="relative min-h-[calc(100vh-80px)] w-full py-6 sm:py-12 flex items-center justify-center px-3 sm:px-6 lg:px-8 overflow-hidden bg-[#031911]">
       {/* =================================================================
           FULL-VIEWPORT BLURRED BACKDROP
           - Large food photo with CSS filter: blur(24px)
@@ -753,7 +761,7 @@ export default function AuthContainer({ initialMode = 'login' }) {
           - Rotating faint mandala at 5% opacity
           - Gold sparkle particles floating upward (max 15, CSS only)
          ================================================================= */}
-      <div aria-hidden="true" className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+      <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         {/* Background photo */}
         <img
           src="/images/cat-desi-ghee.jpg"
@@ -1015,20 +1023,46 @@ export default function AuthContainer({ initialMode = 'login' }) {
               )}
 
               {/* Google Sign-in Full-Width Button */}
-              <button
-                type="button"
-                onClick={handleGoogleSignIn}
-                className="w-full py-2.5 px-4 rounded-2xl border border-[#C9A24B]/35 bg-white/80 hover:bg-white text-xs font-semibold text-[#1B1B1B] flex items-center justify-center gap-2.5 transition-all duration-200 shadow-xs hover:shadow hover:border-[#C9A24B]/70 cursor-pointer backdrop-blur-xs"
-              >
-                <GoogleIcon />
-                <span>Continue with Google</span>
-              </button>
+              <div className="space-y-2">
+                <button
+                  type="button"
+                  onClick={handleGoogleSignIn}
+                  className="w-full py-2.5 px-4 rounded-2xl border border-[#C9A24B]/35 bg-white/80 hover:bg-white text-xs font-semibold text-[#1B1B1B] flex items-center justify-center gap-2.5 transition-all duration-200 shadow-xs hover:shadow hover:border-[#C9A24B]/70 cursor-pointer backdrop-blur-xs"
+                >
+                  <GoogleIcon />
+                  <span>Continue with Google</span>
+                </button>
 
-              <div className="relative flex items-center justify-center">
-                <div className="border-t border-[#E6DEC9]/90 w-full" />
-                <span className="bg-[#FFFDF8]/80 backdrop-blur-xs px-3 text-[10px] uppercase font-bold tracking-wider text-[#9A7624]">
+                {/* Optional temporary Google notice if clicked */}
+                {googleNotice && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="rounded-xl bg-[#F3EAD7] border border-[#C9A24B]/40 px-3 py-2 text-[11px] text-[#0F3D2E] flex items-center justify-between gap-2 shadow-xs"
+                  >
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <ShieldCheck className="w-3.5 h-3.5 text-[#9A7624] shrink-0" />
+                      <span className="leading-tight">{googleNotice}</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setGoogleNotice('')}
+                      className="text-[#7A7468] hover:text-[#0F3D2E] text-sm font-bold px-1"
+                      aria-label="Dismiss note"
+                    >
+                      ×
+                    </button>
+                  </motion.div>
+                )}
+              </div>
+
+              {/* Centered 'OR WITH EMAIL' divider with balanced hairlines */}
+              <div className="relative flex items-center justify-center my-3" aria-hidden="true">
+                <div className="flex-grow border-t border-[#C9A24B]/30" />
+                <span className="shrink-0 px-3 py-0.5 rounded-full bg-[#FFFDF8] border border-[#C9A24B]/25 text-[10px] uppercase font-bold tracking-widest text-[#9A7624] shadow-xs mx-2">
                   or with email
                 </span>
+                <div className="flex-grow border-t border-[#C9A24B]/30" />
               </div>
 
               {/* =============================================================

@@ -379,17 +379,21 @@ body[data-mobile-menu-open="true"] .gg-floating-btn {
   }
 }
 
-/* Fallback for browsers without backdrop-filter support */
-@supports not (backdrop-filter: blur(20px)) {
-  .gg-glass-card {
-    background-color: #FFFDF8 !important;
-  }
-  .gg-glass-brand-panel {
-    background-color: #041D14 !important;
-  }
-  .gg-glass-form-panel {
-    background-color: #FFFDF8 !important;
-  }
+/* Glass card surface tokens with cross-browser webkit support */
+.gg-glass-card {
+  background-color: rgba(255, 252, 245, 0.82);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+}
+.gg-glass-brand-panel {
+  background-color: rgba(4, 29, 20, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.gg-glass-form-panel {
+  background-color: rgba(255, 252, 245, 0.68);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 @media (prefers-reduced-motion: reduce) {
