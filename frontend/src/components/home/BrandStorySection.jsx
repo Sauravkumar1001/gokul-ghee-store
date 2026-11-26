@@ -8,8 +8,14 @@ export default function BrandStorySection() {
   const isHi = language === 'hi';
 
   return (
-    <SectionSurface tone="cream">
-      <Container className="space-y-10">
+    <SectionSurface tone="cream" className="relative overflow-hidden">
+      {/* Subtle warm golden ambient backdrop glow */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-24 -left-20 w-[480px] h-[480px] rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.12)_0%,rgba(251,247,238,0)_70%)]"
+      />
+
+      <Container className="space-y-10 relative z-10">
         <SectionHeading
           variant="centered"
           eyebrow={language === 'en' ? 'Rooted in Danapur' : t('home.brandStory.eyebrow')}
@@ -22,21 +28,21 @@ export default function BrandStorySection() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
           <Reveal direction="left" className="lg:col-span-6">
-            <div className="relative rounded-[24px] overflow-hidden border border-[#C9A24B]/35 gg-shadow-elevated bg-[#0A2B20]">
+            <div className="relative rounded-[28px] overflow-hidden border border-[#C9A24B]/40 gg-shadow-elevated bg-[#0A2B20] shadow-[0_20px_50px_rgba(0,0,0,0.16)] group">
               <img
                 src="/images/story-heritage.jpg"
                 alt="Traditional slow-simmered golden ghee preparation"
                 loading="lazy"
-                className="w-full aspect-[4/3] object-cover"
+                className="w-full aspect-[4/3] object-cover scale-100 group-hover:scale-105 transition-transform duration-700 ease-out"
               />
               <div
                 aria-hidden="true"
-                className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0A2B20]/85 via-[#0F3D2E]/25 to-transparent"
+                className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#0A2B20]/90 via-[#0F3D2E]/30 to-transparent"
               />
-              <div className="absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-auto inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-[#FBF7EE]/94 backdrop-blur-md border border-[#C9A24B]/40 text-xs font-semibold text-[#0F3D2E] gg-shadow-sm">
+              <div className="absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-auto inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#FBF7EE]/95 backdrop-blur-md border border-[#C9A24B]/50 text-xs font-bold text-[#0F3D2E] shadow-md">
                 <MapPin className="w-3.5 h-3.5 text-[#9C7725] shrink-0" aria-hidden="true" />
                 <span className="truncate">
-                  {isHi ? 'आनंद बाजार, दानापुर रसोई' : 'Anand Bazar, Danapur Kitchen'}
+                  {isHi ? 'आनंद बाजार, दानापुर रसोई • शुद्धता की परंपरा' : 'Anand Bazar, Danapur Kitchen • Authentic Heritage'}
                 </span>
               </div>
             </div>

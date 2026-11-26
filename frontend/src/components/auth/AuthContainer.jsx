@@ -1022,7 +1022,7 @@ export default function AuthContainer({ initialMode = 'login' }) {
                 <img
                   src="/images/krishna-gokul.jpg"
                   alt="Lord Krishna with Sacred Cows in Gokul"
-                  className="w-full h-44 object-cover object-top scale-100 group-hover:scale-105 transition-transform duration-700 ease-out"
+                  className="w-full h-44 object-cover object-[center_62%] scale-100 group-hover:scale-105 transition-transform duration-700 ease-out"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#02170F] via-[#02170F]/20 to-transparent" />
                 <div className="absolute bottom-2.5 inset-x-3 flex items-center justify-between">
@@ -1077,7 +1077,7 @@ export default function AuthContainer({ initialMode = 'login' }) {
                     <img
                       src="/images/krishna-gokul.jpg"
                       alt="Gokul Heritage"
-                      className="w-full h-full object-cover object-top"
+                      className="w-full h-full object-cover object-[center_45%]"
                     />
                   </div>
                   <div>

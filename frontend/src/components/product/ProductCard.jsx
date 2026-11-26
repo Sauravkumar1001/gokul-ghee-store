@@ -64,18 +64,20 @@ export default function ProductCard({ product }) {
       radius="md"
       padding="none"
       interactive
-      className="group h-full flex flex-col overflow-hidden"
+      className="group h-full flex flex-col overflow-hidden hover:-translate-y-1.5 transition-all duration-300 hover:shadow-[0_16px_36px_rgba(201,162,75,0.22)] hover:border-[#C9A24B]/70"
     >
       {/* Image Frame */}
       <div className="relative aspect-[4/3] overflow-hidden bg-[#F3EAD7]">
-        <Link to={`/product/${product.slug}`} className="block w-full h-full">
+        <Link to={`/product/${product.slug}`} className="block w-full h-full relative">
           <img
             src={product.images[0]}
             alt={displayName}
             loading="lazy"
             decoding="async"
-            className="w-full h-full object-cover object-center group-hover:scale-[1.04] transition-transform duration-500 ease-out"
+            className="w-full h-full object-cover object-center group-hover:scale-[1.06] transition-transform duration-500 ease-out"
           />
+          {/* Subtle gold shimmer sweep on hover */}
+          <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/25 to-transparent pointer-events-none" />
           <div
             aria-hidden="true"
             className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0F3D2E]/25 via-transparent to-transparent pointer-events-none"
