@@ -1,6 +1,6 @@
 import { SearchX } from 'lucide-react';
 import ProductCard from './ProductCard';
-import { Card, ProductCardSkeleton } from '../ui';
+import { Card, ProductCardSkeleton, StaggerGroup, StaggerItem } from '../ui';
 import { useLanguage } from '../../context/LanguageContext';
 
 export default function ProductGrid({
@@ -58,12 +58,20 @@ export default function ProductGrid({
   }
 
   return (
-    <div
+    <StaggerGroup
+      staggerDelay={0.07}
+      delayChildren={0.04}
       className={`grid ${gridColsClass} gap-3 sm:gap-5 lg:gap-6 items-stretch ${className}`.trim()}
     >
       {products.map((product) => (
-        <ProductCard key={product.id || product._id || product.slug} product={product} />
+        <StaggerItem
+          key={product.id || product._id || product.slug}
+          distance={20}
+          className="h-full"
+        >
+          <ProductCard product={product} />
+        </StaggerItem>
       ))}
-    </div>
+    </StaggerGroup>
   );
 }
